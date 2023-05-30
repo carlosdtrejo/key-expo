@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { FlatList, View, StyleSheet, Pressable } from "react-native";
 import { Link, useRouter } from "expo-router";
 import { FontAwesome5 } from "@expo/vector-icons";
@@ -13,8 +13,9 @@ const renderItem = (item: any, index: any) => (
       <View style={styles.card}>
         <FontAwesome5 name="qrcode" size={52} color="#fff" />
         <View style={styles.accounts}>
-          {item.map((acc) => (
+          {item.map((acc, idx) => (
             <FontAwesome5
+              key={idx}
               name={medias[acc.media].icon}
               size={28}
               color={medias[acc.media].color}

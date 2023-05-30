@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, StyleSheet, Button, Image } from "react-native";
+import { Text, View, StyleSheet, Button } from "react-native";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import { IconButton } from "react-native-paper";
-import { FontAwesome5, MaterialCommunityIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 
 export default function scanner() {
@@ -53,8 +53,6 @@ export default function scanner() {
       aspect: [4, 3],
       quality: 1,
     });
-
-    console.log(result);
 
     if (!result.canceled) {
       const results = await BarCodeScanner.scanFromURLAsync(

@@ -1,5 +1,5 @@
 import { Tabs, useRouter } from "expo-router";
-import { FontAwesome5, MaterialCommunityIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { IconButton, Button } from "react-native-paper";
 
 export default () => {
@@ -15,7 +15,7 @@ export default () => {
           tabBarLabel: "My Library",
           headerTitle: "Library",
           headerTitleAlign: "left",
-          headerTitleStyle: { fontSize: 24 },
+          headerTitleStyle: { fontSize: 32 },
           headerRight: () => (
             <IconButton
               style={{ marginRight: 10 }}
@@ -45,7 +45,7 @@ export default () => {
           tabBarLabel: "Accounts",
           headerTitle: "Accounts",
           headerTitleAlign: "left",
-          headerTitleStyle: { fontSize: 24 },
+          headerTitleStyle: { fontSize: 32 },
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons
               name="account-multiple"

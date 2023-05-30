@@ -12,13 +12,13 @@ export const accountSlice = createSlice({
       // doesn't actually mutate the state because it uses the Immer library,
       // which detects changes to a "draft state" and produces a brand new
       // immutable state based off those changes
-      state.value.find((x) => x.id === action.payload.id).enabled = true;
-      state.value.find((x) => x.id === action.payload.id).username =
+      state.value.find((account) => account.id === action.payload.id).enabled = true;
+      state.value.find((account) => account.id === action.payload.id).username =
         action.payload.username;
     },
     disable: (state, action) => {
-      state.value.find((x) => x.id === action.payload.id).enabled = false;
-      state.value.find((x) => x.id === action.payload.id).username =
+      state.value.find((account) => account.id === action.payload.id).enabled = false;
+      state.value.find((account) => account.id === action.payload.id).username =
         action.payload.username;
     },
   },

@@ -1,12 +1,11 @@
 import { View, FlatList, StyleSheet } from "react-native";
-import { Link, useNavigation } from "expo-router";
+import { Link, useNavigation, useRouter } from "expo-router";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { IconButton, Button, Snackbar, Text } from "react-native-paper";
 
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectAccount } from "../../../store/accountSlice";
-import QRCode from "react-native-qrcode-svg";
 import medias from "../../../data/medias";
 
 import {
@@ -17,11 +16,12 @@ import {
 
 const Modal = () => {
   const navigation = useNavigation();
+  const router = useRouter();
 
   const dispatch = useDispatch();
 
   // If the page was reloaded or navigated to directly, then the modal should be presented as
-  // a full screen page. You may need to change the UI to account for this.
+  // a full screen page.
   const isPresented = navigation.canGoBack();
 
   const [visible, setVisible] = useState(false);
@@ -38,19 +38,29 @@ const Modal = () => {
   );
 
   const handleCreateCode = () => {
-    const codeValues = [];
+    const codeAccounts = [];
+    console.log("selectedMedias", selectedMedias);
     if (selectedMedias.size === 0) {
+      console.log("TESTING");
       onToggleSnackBar();
-    }
-    selectedMedias.forEach((media, idx) => {
-      codeValues.push({
-        media: media,
-        username: enabledAccounts
-          .find((acc) => acc.id === media)
-          .username.toLowerCase(),
+    } else {
+      selectedMedias.forEach((media, idx) => {
+        codeAccounts.push({
+          media: media,
+          username: enabledAccounts
+            .find((acc) => acc.id === media)
+            .username.toLowerCase(),
+          value:
+            media +
+            ":" +
+            enabledAccounts
+              .find((acc) => acc.id === media)
+              .username.toLowerCase(),
+        });
       });
-    });
-    dispatch(createCode(codeValues));
+      dispatch(createCode(codeAccounts));
+      router.back();
+    }
   };
 
   const renderItem = ({ item }) => {
@@ -122,22 +132,24 @@ const Modal = () => {
           </Text>
         )}
       </Snackbar>
-      <Button
-        icon="qrcode"
-        mode="contained"
-        uppercase={true}
-        onPress={handleCreateCode}
-        labelStyle={{ fontWeight: "bold", fontSize: 22, paddingTop: 5 }}
-        contentStyle={{ margin: 10 }}
-        style={{
-          marginBottom: 50,
-          backgroundColor: "#212121",
-          width: 300,
-          borderRadius: 90,
-        }}
-      >
-        Create
-      </Button>
+      {enabledAccounts.size !== 0 && (
+        <Button
+          icon="qrcode"
+          mode="contained"
+          uppercase={true}
+          onPress={handleCreateCode}
+          labelStyle={{ fontWeight: "bold", fontSize: 22, paddingTop: 5 }}
+          contentStyle={{ margin: 10, flexDirection: "row-reverse" }}
+          style={{
+            marginBottom: 50,
+            backgroundColor: "#212121",
+            width: 300,
+            borderRadius: 90,
+          }}
+        >
+          Create
+        </Button>
+      )}
     </View>
   );
 };

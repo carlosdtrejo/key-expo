@@ -1,5 +1,5 @@
 import { Stack, useRouter } from "expo-router";
-import { FontAwesome5, MaterialCommunityIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { IconButton, Button } from "react-native-paper";
 
 const StackLayout = () => {
@@ -45,16 +45,13 @@ const StackLayout = () => {
             />
           ),
           headerRight: () => (
-            <IconButton
-              onPress={() => console.log("Clear button pressed in modal")}
-              icon={() => (
-                <MaterialCommunityIcons
-                  name="restore"
-                  color="white"
-                  size={28}
-                />
-              )}
-            />
+            <Button
+              mode="text"
+              onPress={() => router.push("/codes")}
+              labelStyle={{ fontSize: 16, color: "#fff" }}
+            >
+              Clear
+            </Button>
           ),
         }}
       />
