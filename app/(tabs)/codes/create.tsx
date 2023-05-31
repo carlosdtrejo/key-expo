@@ -8,11 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { selectAccount } from "../../../store/accountSlice";
 import medias from "../../../data/medias";
 
-import {
-  createCode,
-  deleteCode,
-  selectLibrary,
-} from "../../../store/librarySlice";
+import { createCode } from "../../../store/librarySlice";
 
 const Modal = () => {
   const navigation = useNavigation();
@@ -41,7 +37,6 @@ const Modal = () => {
     const codeAccounts = [];
     console.log("selectedMedias", selectedMedias);
     if (selectedMedias.size === 0) {
-      console.log("TESTING");
       onToggleSnackBar();
     } else {
       selectedMedias.forEach((media, idx) => {
