@@ -38,19 +38,19 @@ const DetailsPage = () => {
 
   const finalQrCodeValue = allValues.join("?");
 
-  console.log(finalQrCodeValue);
-
   const onDownloadPressed = async () => {
     try {
       const localUri = await captureRef(viewShot, {
         height: 440,
         quality: 1,
       });
-
-      await MediaLibrary.saveToLibraryAsync(localUri);
-      if (localUri) {
-        setDialog("You have successfully saved your code to photos.");
-        showDialog();
+      const { status } = await MediaLibrary.requestPermissionsAsync();
+      if (status === "granted") {
+        await MediaLibrary.saveToLibraryAsync(localUri);
+        if (localUri) {
+          setDialog("You have successfully saved your code to photos.");
+          showDialog();
+        }
       }
     } catch (e) {
       console.log(e);

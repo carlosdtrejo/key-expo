@@ -8,7 +8,7 @@ import { useRouter } from "expo-router";
 import { Platform } from "react-native";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
-import medias from "../../../data/medias";
+import medias from "../../data/medias";
 import { Subscription } from "expo-modules-core";
 
 Notifications.setNotificationHandler({

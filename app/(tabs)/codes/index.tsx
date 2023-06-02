@@ -1,5 +1,5 @@
 import React from "react";
-import { FlatList, View, StyleSheet, Pressable } from "react-native";
+import { FlatList, View, StyleSheet, Pressable, Platform } from "react-native";
 import { Link, useRouter } from "expo-router";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { FAB, IconButton } from "react-native-paper";
@@ -22,8 +22,6 @@ export default function HomePage() {
   let prevOpenedRow;
   let refsArray: Array<any> = [];
   const library = useSelector(selectLibrary);
-
-  console.log("LIBRARY", library);
 
   const ListItem = ({ item, index }: { item: Code; index: number }) => {
     const dispatch = useDispatch();
@@ -103,9 +101,12 @@ export default function HomePage() {
       <FAB
         icon="plus"
         style={styles.fab}
-        onPress={() => router.push("/codes/create")}
-        label="Create"
-        color="#fff"
+        onPress={() =>
+          Platform.OS === "ios"
+            ? router.push("/codes/create")
+            : router.push("/create")
+        }
+        color="#212121"
       />
     </View>
   );
@@ -151,6 +152,6 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     borderRadius: 50,
-    backgroundColor: "#212121",
+    backgroundColor: "white",
   },
 });

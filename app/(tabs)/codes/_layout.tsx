@@ -1,6 +1,7 @@
 import { Stack, useRouter } from "expo-router";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { IconButton, Button } from "react-native-paper";
+import { Platform } from "react-native";
 
 const StackLayout = () => {
   const router = useRouter();
@@ -18,7 +19,7 @@ const StackLayout = () => {
         name="scanner"
         options={{
           headerTitle: "",
-          presentation: "modal",
+          presentation: Platform.OS === "ios" ? "modal" : undefined,
           headerShown: true,
           headerTransparent: true,
           headerLeft: () => (
@@ -34,8 +35,10 @@ const StackLayout = () => {
       <Stack.Screen
         name="create"
         options={{
-          presentation: "modal",
+          presentation: Platform.OS === "ios" ? "modal" : undefined,
           headerTitle: "Create Code",
+          headerShown: true,
+          headerTransparent: true,
           headerLeft: () => (
             <IconButton
               onPress={() => router.back()}

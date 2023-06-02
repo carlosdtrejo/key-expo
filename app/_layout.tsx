@@ -26,5 +26,5 @@ const StackLayout = () => {
     </Provider>
   );
 };
-
+  
 export default StackLayout;

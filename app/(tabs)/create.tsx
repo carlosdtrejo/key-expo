@@ -5,10 +5,10 @@ import { IconButton, Button, Snackbar, Text } from "react-native-paper";
 
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { selectAccount } from "../../../store/accountSlice";
-import medias from "../../../data/medias";
+import { selectAccount } from "../../store/accountSlice";
+import medias from "../../data/medias";
 
-import { createCode } from "../../../store/librarySlice";
+import { createCode } from "../../store/librarySlice";
 
 const Modal = () => {
   const navigation = useNavigation();

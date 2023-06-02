@@ -1,13 +1,29 @@
 import { useState } from "react";
-import { View, FlatList, StyleSheet } from "react-native";
+import {
+  View,
+  FlatList,
+  StyleSheet,
+  KeyboardAvoidingView,
+  Platform,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from "react-native";
 import { TextInput, Switch } from "react-native-paper";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
 import medias from "../../data/medias";
 import { enable, disable, selectAccount } from "../../store/accountSlice";
+import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view";
 
-const Account = ({ account }) => {
-  const [username, setUsername] = useState(account.username || "");
+type AccountProps = {
+  account: {
+    id: string;
+    username: string;
+    enabled: boolean;
+  };
+};
+const Account = ({ account }: AccountProps) => {
+  const [username, setUsername] = useState(account?.username || "");
   const [isSwitchOn, toggleSwitch] = useState<boolean>(account.enabled);
 
   const dispatch = useDispatch();
@@ -49,20 +65,23 @@ const Account = ({ account }) => {
 const AccountsPage = () => {
   const accounts = useSelector(selectAccount);
   return (
-    <View
-      style={{
-        flex: 1,
-        paddingVertical: 15,
-      }}
-    >
-      <FlatList
-        keyExtractor={({ id }) => id}
-        data={accounts}
-        ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
-        renderItem={({ item }) => <Account account={item} />}
-        style={{ paddingLeft: 15 }}
-      />
-    </View>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View
+        style={{
+          flex: 1,
+          paddingVertical: 15,
+        }}
+      >
+        <KeyboardAwareFlatList
+          removeClippedSubviews={false}
+          keyExtractor={({ id }) => id}
+          data={accounts}
+          ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
+          renderItem={({ item }) => <Account account={item} />}
+          style={{ paddingLeft: 15 }}
+        />
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 

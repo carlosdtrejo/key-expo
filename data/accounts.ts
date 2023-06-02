@@ -1,7 +1,7 @@
 const accounts = [
   { id: "fb", username: "", enabled: false },
   {
-    id: "sc",
+    id: "gh",
     username: "",
     enabled: false,
   },
@@ -16,12 +16,37 @@ const accounts = [
     enabled: false,
   },
   {
-    id: "yt",
+    id: "med",
     username: "",
     enabled: false,
   },
   {
     id: "pin",
+    username: "",
+    enabled: false,
+  },
+  {
+    id: "red",
+    username: "",
+    enabled: false,
+  },
+  {
+    id: "sc",
+    username: "",
+    enabled: false,
+  },
+  {
+    id: "scd",
+    username: "",
+    enabled: false,
+  },
+  {
+    id: "tk",
+    username: "",
+    enabled: false,
+  },
+  {
+    id: "tb",
     username: "",
     enabled: false,
   },
@@ -36,45 +61,15 @@ const accounts = [
     enabled: false,
   },
   {
-    id: "gh",
-    username: "",
-    enabled: false,
-  },
-  {
-    id: "med",
-    username: "",
-    enabled: false,
-  },
-  {
-    id: "scd",
-    username: "",
-    enabled: false,
-  },
-  {
-    id: "tb",
-    username: "",
-    enabled: false,
-  },
-  {
-    id: "red",
-    username: "",
-    enabled: false,
-  },
-  {
-    id: "tk",
-    username: "",
-    enabled: false,
-  },
-  {
     id: "vim",
     username: "",
     enabled: false,
   },
-  // {
-  //   id: "ps",
-  //   username: "",
-  //   enabled: false,
-  // },
+  {
+    id: "yt",
+    username: "",
+    enabled: false,
+  },
 ];
 
 export default accounts;

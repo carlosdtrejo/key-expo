@@ -1,7 +1,7 @@
 import { Tabs, useRouter } from "expo-router";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { IconButton, Button } from "react-native-paper";
-
+import { Platform } from "react-native";
 export default () => {
   const router = useRouter();
 
@@ -19,7 +19,11 @@ export default () => {
           headerRight: () => (
             <IconButton
               style={{ marginRight: 10 }}
-              onPress={() => router.push("/codes/scanner")}
+              onPress={() =>
+                Platform.OS === "ios"
+                  ? router.push("/codes/scanner")
+                  : router.push("/scanner")
+              }
               icon={() => (
                 <MaterialCommunityIcons
                   color="#fff"
@@ -62,6 +66,38 @@ export default () => {
             >
               Done
             </Button>
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="scanner"
+        options={{
+          href: null,
+          headerShown: true,
+          headerTitle: "",
+          headerLeft: () => (
+            <IconButton
+              onPress={() => router.back()}
+              icon={() => (
+                <MaterialCommunityIcons color="white" name="close" size={28} />
+              )}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="create"
+        options={{
+          href: null,
+          headerShown: true,
+          headerTitle: "Create Code",
+          headerLeft: () => (
+            <IconButton
+              onPress={() => router.back()}
+              icon={() => (
+                <MaterialCommunityIcons name="close" color="white" size={28} />
+              )}
+            />
           ),
         }}
       />
