@@ -40,18 +40,13 @@ const Modal = () => {
       onToggleSnackBar();
     } else {
       selectedMedias.forEach((media, idx) => {
-        codeAccounts.push({
-          media: media,
-          username: enabledAccounts
-            .find((acc) => acc.id === media)
-            .username.toLowerCase(),
-          value:
-            media +
+        codeAccounts.push(
+          media +
             ":" +
             enabledAccounts
               .find((acc) => acc.id === media)
-              .username.toLowerCase(),
-        });
+              .username.toLowerCase()
+        );
       });
       dispatch(createCode(codeAccounts));
       router.back();

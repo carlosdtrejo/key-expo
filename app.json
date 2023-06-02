@@ -19,6 +19,12 @@
       "bundler": "metro"
     },
     "name": "key-expo",
-    "slug": "key-expo"
+    "slug": "key",
+    "extra": {
+      "eas": {
+        "projectId": "0ac6c127-ceb8-47a2-b0af-c68bc3568e40"
+      }
+    },
+    "owner": "cdtrejo"
   }
 }

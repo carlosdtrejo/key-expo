@@ -27,14 +27,14 @@ const DetailsPage = () => {
   const [visible, setVisible] = React.useState(false);
   const showDialog = () => setVisible(true);
   const hideDialog = () => setVisible(false);
-  const [textDialog, setDialog] = useState('');
+  const [textDialog, setDialog] = useState("");
 
   const library = useSelector(selectLibrary);
   const code = library[Number(id)];
 
   const allValues = [];
 
-  code.forEach((item) => allValues.push(item.value));
+  code.forEach((item) => allValues.push(item));
 
   const finalQrCodeValue = allValues.join("?");
 
@@ -73,7 +73,18 @@ const DetailsPage = () => {
       console.log(e);
     }
   };
-
+  const getIcon = (item) => {
+    const value = item.split(":");
+    return medias[value[0]].icon;
+  };
+  const getColor = (item) => {
+    const value = item.split(":");
+    return medias[value[0]].color;
+  };
+  const getUsername = (item) => {
+    const value = item.split(":");
+    return value[1];
+  };
   return (
     <PaperProvider>
       <View style={styles.container}>
@@ -85,20 +96,17 @@ const DetailsPage = () => {
         />
         <ViewShot ref={viewShot} options={{ format: "jpg", quality: 0.9 }}>
           <View style={styles.qrcode}>
-            <QRCode
-              size={200}
-              value={finalQrCodeValue}
-            />
+            <QRCode size={200} value={finalQrCodeValue} />
           </View>
           <View style={styles.accounts}>
             {code.map((acc, idx) => (
               <View key={idx} style={styles.accountContent}>
                 <FontAwesome5
-                  name={medias[acc.media].icon}
+                  name={getIcon(acc)}
                   size={28}
-                  color={medias[acc.media].color}
+                  color={getColor(acc)}
                 />
-                <Text style={styles.username}>{acc.username}</Text>
+                <Text style={styles.username}>{getUsername(acc)}</Text>
               </View>
             ))}
           </View>

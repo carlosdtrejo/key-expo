@@ -17,7 +17,7 @@ const Account = ({ account }) => {
 
   return (
     <View style={styles.accountContainer}>
-      <FontAwesome5 color="#fff" name={icon} size={24} />
+      <FontAwesome5 color={isSwitchOn ? color : "#fff"} name={icon} size={24} />
       <TextInput
         style={styles.textInput}
         placeholder="@username"
@@ -26,20 +26,22 @@ const Account = ({ account }) => {
         activeUnderlineColor={color}
         textColor="#fff"
       />
-      <Switch
-        style={styles.switch}
-        value={isSwitchOn}
-        disabled={username.length === 0}
-        onValueChange={() => {
-          toggleSwitch(!isSwitchOn);
-          if (!isSwitchOn) {
-            dispatch(enable({ id: account.id, username: username }));
-          } else {
-            dispatch(disable({ id: account.id, username: username }));
-          }
-        }}
-        color={color}
-      />
+      {username && (
+        <Switch
+          style={styles.switch}
+          value={isSwitchOn}
+          disabled={username.length === 0}
+          onValueChange={() => {
+            toggleSwitch(!isSwitchOn);
+            if (!isSwitchOn) {
+              dispatch(enable({ id: account.id, username: username }));
+            } else {
+              dispatch(disable({ id: account.id, username: username }));
+            }
+          }}
+          color={color}
+        />
+      )}
     </View>
   );
 };

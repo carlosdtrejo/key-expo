@@ -44,15 +44,6 @@ const StackLayout = () => {
               )}
             />
           ),
-          headerRight: () => (
-            <Button
-              mode="text"
-              onPress={() => router.push("/codes")}
-              labelStyle={{ fontSize: 16, color: "#fff" }}
-            >
-              Clear
-            </Button>
-          ),
         }}
       />
     </Stack>

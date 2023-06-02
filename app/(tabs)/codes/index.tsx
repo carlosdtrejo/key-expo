@@ -56,6 +56,14 @@ export default function HomePage() {
       prevOpenedRow = refsArray[index];
     };
 
+    const getIcon = (item) => {
+      const value = item.split(":");
+      return medias[value[0]].icon;
+    };
+    const getColor = (item) => {
+      const value = item.split(":");
+      return medias[value[0]].color;
+    };
     return (
       <Swipeable
         ref={(ref) => (refsArray[index] = ref)}
@@ -72,9 +80,9 @@ export default function HomePage() {
                 {item.map((acc, idx) => (
                   <FontAwesome5
                     key={idx}
-                    name={medias[acc.media].icon}
+                    name={getIcon(acc)}
                     size={28}
-                    color={medias[acc.media].color}
+                    color={getColor(acc)}
                   />
                 ))}
               </View>
