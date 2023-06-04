@@ -12,24 +12,6 @@ const StackLayout = () => {
         name="index"
         options={{
           headerShown: false,
-          headerTitleStyle: { fontSize: 20 },
-        }}
-      />
-      <Stack.Screen
-        name="scanner"
-        options={{
-          headerTitle: "",
-          presentation: Platform.OS === "ios" ? "modal" : undefined,
-          headerShown: true,
-          headerTransparent: true,
-          headerLeft: () => (
-            <IconButton
-              onPress={() => router.back()}
-              icon={() => (
-                <MaterialCommunityIcons color="white" name="close" size={28} />
-              )}
-            />
-          ),
         }}
       />
       <Stack.Screen
@@ -37,13 +19,17 @@ const StackLayout = () => {
         options={{
           presentation: Platform.OS === "ios" ? "modal" : undefined,
           headerTitle: "Create Code",
-          headerShown: true,
+          headerShown: false,
           headerTransparent: true,
           headerLeft: () => (
             <IconButton
               onPress={() => router.back()}
               icon={() => (
-                <MaterialCommunityIcons name="close" color="white" size={28} />
+                <MaterialCommunityIcons
+                  name="close"
+                  color="#212121"
+                  size={28}
+                />
               )}
             />
           ),

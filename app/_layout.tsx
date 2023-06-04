@@ -1,15 +1,17 @@
 import { Stack } from "expo-router";
 import { ThemeProvider } from "@react-navigation/native";
-import store from "../store/store";
+import { store, persistor } from "../store/store";
 import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
+import { PaperProvider, Portal } from "react-native-paper";
 
 const theme = {
-  dark: true,
+  dark: false,
   colors: {
-    primary: "rgb(255, 255, 255)",
-    background: "rgb(18,18,18)",
-    card: "rgb(18,18,18)",
-    text: "rgb(255, 255, 255)",
+    primary: "rgb(18,18,18)",
+    background: "rgb(255, 255, 255)",
+    card: "rgb(255, 255, 255)",
+    text: "rgb(18,18,18)",
     border: "rgb(18,18,18)",
     notification: "rgb(255, 69, 58)",
   },
@@ -18,13 +20,19 @@ const theme = {
 const StackLayout = () => {
   return (
     <Provider store={store}>
-      <ThemeProvider value={theme}>
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        </Stack>
-      </ThemeProvider>
+      <PersistGate loading={null} persistor={persistor}>
+        <ThemeProvider value={theme}>
+          <PaperProvider>
+            <Portal>
+              <Stack>
+                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              </Stack>
+            </Portal>
+          </PaperProvider>
+        </ThemeProvider>
+      </PersistGate>
     </Provider>
   );
 };
-  
+
 export default StackLayout;

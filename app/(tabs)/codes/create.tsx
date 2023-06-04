@@ -1,7 +1,7 @@
 import { View, FlatList, StyleSheet } from "react-native";
 import { Link, useNavigation, useRouter } from "expo-router";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { IconButton, Button, Snackbar, Text } from "react-native-paper";
+import { IconButton, Button, Text, Snackbar } from "react-native-paper";
 
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -23,7 +23,6 @@ const Modal = () => {
   const [visible, setVisible] = useState(false);
 
   const onToggleSnackBar = () => setVisible(!visible);
-
   const onDismissSnackBar = () => setVisible(false);
 
   const [selectedMedias, setSelectedMedias] = useState(new Set());
@@ -55,24 +54,32 @@ const Modal = () => {
     const mediaColor = media.color;
     const mediaName = media.icon;
     const mediaId = item.id;
+    const isMediaSelected = selectedMedias.has(mediaId);
     return (
       <View style={{ padding: 10 }}>
         <IconButton
           mode="contained"
-          icon={() => <FontAwesome5 color="#fff" name={mediaName} size={28} />}
-          size={40}
-          containerColor={selectedMedias.has(mediaId) ? mediaColor : "#212121"}
+          icon={() => (
+            <FontAwesome5
+              color={isMediaSelected ? "#fff" : "#212121"}
+              name={mediaName}
+              size={32}
+            />
+          )}
+          size={45}
+          containerColor={isMediaSelected ? mediaColor : "#F2F2F2"}
           onPress={() => {
-            if (selectedMedias.size >= 3 && !selectedMedias.has(mediaId)) {
+            if (selectedMedias.size >= 3 && !isMediaSelected) {
               onToggleSnackBar();
-            } else if (selectedMedias.has(mediaId)) {
+            } else if (isMediaSelected) {
               selectedMedias.delete(mediaId);
               setSelectedMedias(new Set(selectedMedias));
             } else {
               setSelectedMedias(new Set(selectedMedias.add(mediaId)));
             }
           }}
-          selected={selectedMedias.has(mediaId)}
+          selected={isMediaSelected}
+          accessibilityLabel={mediaName}
         />
       </View>
     );
@@ -121,12 +128,11 @@ const Modal = () => {
       </Snackbar>
       {enabledAccounts.size !== 0 && (
         <Button
-          icon="qrcode"
           mode="contained"
           uppercase={true}
           onPress={handleCreateCode}
           labelStyle={{ fontWeight: "bold", fontSize: 22, paddingTop: 5 }}
-          contentStyle={{ margin: 10, flexDirection: "row-reverse" }}
+          contentStyle={{ margin: 10 }}
           style={{
             marginBottom: 50,
             backgroundColor: "#212121",
@@ -145,7 +151,7 @@ export default Modal;
 
 const styles = StyleSheet.create({
   snackbar: {
-    color: "#fff",
+    color: "#212121",
     fontWeight: 700,
     marginBottom: 100,
   },

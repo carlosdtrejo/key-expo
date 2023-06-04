@@ -1,15 +1,17 @@
 import React from "react";
-import { FlatList, View, StyleSheet, Pressable, Platform } from "react-native";
+import { FlatList, View, StyleSheet, Pressable } from "react-native";
 import { Link, useRouter } from "expo-router";
-import { FontAwesome5 } from "@expo/vector-icons";
-import { FAB, IconButton } from "react-native-paper";
-import { useSelector } from "react-redux";
-import { selectLibrary } from "../../../store/librarySlice";
+import { FAB, Divider } from "react-native-paper";
 import medias from "../../../data/medias";
 import Swipeable from "react-native-gesture-handler/Swipeable";
-import { useDispatch } from "react-redux";
-import { deleteCode } from "../../../store/librarySlice";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useDispatch, useSelector } from "react-redux";
+import { selectLibrary, deleteCode } from "../../../store/librarySlice";
+import { selectAccount } from "../../../store/accountSlice";
+import {
+  MaterialCommunityIcons,
+  Ionicons,
+  FontAwesome5,
+} from "@expo/vector-icons";
 
 type Code = {
   media: string;
@@ -17,32 +19,44 @@ type Code = {
   value: string;
 }[];
 
+type ListItemProps = {
+  item: Code;
+  index: number;
+};
+
 export default function HomePage() {
+  // Navigation
   const router = useRouter();
+
+  // Delete operation
   let prevOpenedRow;
   let refsArray: Array<any> = [];
-  const library = useSelector(selectLibrary);
 
-  const ListItem = ({ item, index }: { item: Code; index: number }) => {
+  // State of Codes list (library)
+  const library = useSelector(selectLibrary);
+  const accounts = useSelector(selectAccount);
+  const enabledAccounts = accounts.filter(
+    (account) => account.enabled === true
+  );
+
+  // FAB Group Button State
+  const [state, setState] = React.useState({ open: false });
+  const onStateChange = ({ open }) => setState({ open });
+  const { open } = state;
+
+  const ListItem = ({ item, index }: ListItemProps) => {
     const dispatch = useDispatch();
-    const rightSwipeActions = () => {
+    const RightSwipeActions = () => {
       return (
         <View
           style={{
-            justifyContent: "center",
+            flex: 1,
+            backgroundColor: "red",
             alignItems: "flex-end",
+            justifyContent: "center",
           }}
         >
-          <IconButton
-            icon={() => (
-              <MaterialCommunityIcons color="red" name="delete" size={30} />
-            )}
-            size={50}
-            onPress={() => {
-              dispatch(deleteCode({ index }));
-              closeRow(index);
-            }}
-          />
+          <Ionicons name="trash" size={32} color="#fff" />
         </View>
       );
     };
@@ -52,6 +66,11 @@ export default function HomePage() {
         prevOpenedRow.close();
       }
       prevOpenedRow = refsArray[index];
+    };
+
+    const swipeFromRightOpen = () => {
+      dispatch(deleteCode({ index }));
+      closeRow(index);
     };
 
     const getIcon = (item) => {
@@ -68,12 +87,13 @@ export default function HomePage() {
         friction={2}
         leftThreshold={30}
         rightThreshold={40}
-        renderRightActions={rightSwipeActions}
+        renderRightActions={RightSwipeActions}
+        onSwipeableRightOpen={swipeFromRightOpen}
       >
         <Link href={`/list/${index}`} asChild>
           <Pressable style={styles.itemContainer}>
             <View style={styles.card}>
-              <FontAwesome5 name="qrcode" size={52} color="#fff" />
+              <Ionicons name="qr-code" size={52} color="#212121" />
               <View style={styles.accounts}>
                 {item.map((acc, idx) => (
                   <FontAwesome5
@@ -97,16 +117,58 @@ export default function HomePage() {
         data={library}
         keyExtractor={(_item, index) => `code ${index}`}
         renderItem={({ item, index }) => <ListItem item={item} index={index} />}
+        ItemSeparatorComponent={() => <Divider />}
       />
-      <FAB
-        icon="plus"
-        style={styles.fab}
-        onPress={() =>
-          Platform.OS === "ios"
-            ? router.push("/codes/create")
-            : router.push("/create")
+      <FAB.Group
+        open={open}
+        visible
+        icon={open ? "close" : "account-plus"}
+        color={"#fff"}
+        fabStyle={{ backgroundColor: "#212121", borderRadius: 50 }}
+        backdropColor="rgba(0,0,0,0.5)"
+        actions={
+          enabledAccounts.length !== 0
+            ? [
+                {
+                  icon: "account",
+                  label: "Socials",
+                  color: "#fff",
+                  style: { backgroundColor: "#212121" },
+                  labelStyle: { fontWeight: "700" },
+                  containerStyle: { backgroundColor: "#212121" },
+                  labelTextColor: "#fff",
+                  onPress: () => router.push("/socials"),
+                },
+                {
+                  icon: "qrcode",
+                  label: "Create code",
+                  color: "#fff",
+                  style: { backgroundColor: "#212121" },
+                  labelStyle: { fontWeight: "700" },
+                  containerStyle: { backgroundColor: "#212121" },
+                  labelTextColor: "#fff",
+                  onPress: () => router.push("/codes/create"),
+                },
+              ]
+            : [
+                {
+                  icon: "account",
+                  label: "Add accounts",
+                  color: "#fff",
+                  style: { backgroundColor: "#212121" },
+                  labelStyle: { fontWeight: "700" },
+                  containerStyle: { backgroundColor: "#212121" },
+                  labelTextColor: "#fff",
+                  onPress: () => router.push("/accounts"),
+                },
+              ]
         }
-        color="#212121"
+        onStateChange={onStateChange}
+        onPress={() => {
+          if (open) {
+            // do something if the speed dial is open
+          }
+        }}
       />
     </View>
   );
@@ -115,18 +177,14 @@ export default function HomePage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "",
-    width: "100%",
   },
   itemContainer: {
     flex: 1,
     flexDirection: "row",
     alignItems: "center",
-    padding: 5,
-    backgroundColor: "#212121",
-    borderRadius: 10,
+    borderRadius: 15,
     marginHorizontal: 15,
-    marginVertical: 10,
+    marginVertical: 4,
   },
   card: {
     padding: 20,
@@ -145,13 +203,5 @@ const styles = StyleSheet.create({
     gap: 30,
     alignItems: "center",
     justifyContent: "center",
-  },
-  fab: {
-    position: "absolute",
-    margin: 16,
-    right: 0,
-    bottom: 0,
-    borderRadius: 50,
-    backgroundColor: "white",
   },
 });

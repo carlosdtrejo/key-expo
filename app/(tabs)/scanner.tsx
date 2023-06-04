@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Text, View, StyleSheet, Button, Linking } from "react-native";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import { IconButton } from "react-native-paper";
@@ -49,7 +49,7 @@ export default function scanner() {
 
     responseListener.current =
       Notifications.addNotificationResponseReceivedListener((response) => {
-        console.log(response.notification.request.content.data.url)
+        console.log(response.notification.request.content.data.url);
         const notificationURL = response.notification.request.content.data.url;
         Linking.openURL(notificationURL);
       });
@@ -92,6 +92,18 @@ export default function scanner() {
 
   return (
     <View style={styles.container}>
+      <View style={{ position: "absolute", top: 60, left: 15 }}>
+        <IconButton
+          mode="contained"
+          icon={() => (
+            <MaterialCommunityIcons color="#fff" name="chevron-left" size={30} />
+          )}
+          onPress={() => router.back()}
+          containerColor="#212121"
+          size={24}
+        />
+      </View>
+
       <View style={styles.barcodebox}>
         <BarCodeScanner
           onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
@@ -105,17 +117,19 @@ export default function scanner() {
           color="tomato"
         />
       )} */}
-      {Platform.OS !== "android" && <View style={styles.actions}>
-        <IconButton
-          mode="contained"
-          icon={() => (
-            <MaterialCommunityIcons color="#fff" name="image" size={38} />
-          )}
-          onPress={pickImage}
-          containerColor="#212121"
-          size={50}
-        />
-      </View>}
+      {Platform.OS === "ios" && (
+        <View style={styles.actions}>
+          <IconButton
+            mode="contained"
+            icon={() => (
+              <MaterialCommunityIcons color="#212121" name="image" size={28} />
+            )}
+            onPress={pickImage}
+            containerColor="#F2F2F2"
+            size={40}
+          />
+        </View>
+      )}
     </View>
   );
 }
@@ -172,6 +186,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    // backgroundColor: "rgba(0.2, 0.2, 0.2, 0.2)"
   },
   barcodebox: {
     alignItems: "center",
@@ -184,6 +199,6 @@ const styles = StyleSheet.create({
     borderColor: "white",
   },
   actions: {
-    marginTop: 100
+    marginTop: 100,
   },
 });

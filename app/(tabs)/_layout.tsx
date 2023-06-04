@@ -1,7 +1,12 @@
 import { Tabs, useRouter } from "expo-router";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { IconButton, Button } from "react-native-paper";
-import { Platform } from "react-native";
+import {
+  MaterialCommunityIcons,
+  FontAwesome5,
+  Ionicons,
+} from "@expo/vector-icons";
+import { IconButton } from "react-native-paper";
+import { View } from "react-native";
+
 export default () => {
   const router = useRouter();
 
@@ -11,75 +16,25 @@ export default () => {
         name="codes"
         options={{
           headerShown: true,
-          tabBarShowLabel: true,
-          tabBarLabel: "My Library",
-          headerTitle: "Library",
+          tabBarShowLabel: false,
+          tabBarLabel: "My Codes",
+          headerTitle: "Codes",
           headerTitleAlign: "left",
           headerTitleStyle: { fontSize: 32 },
+          tabBarLabelStyle: { fontWeight: "700" },
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="qr-code" size={32} color={color} />
+          ),
+          tabBarStyle: {
+            borderTopWidth: 1,
+            borderTopColor: "#F2F2F2",
+          },
+          headerShadowVisible: false,
           headerRight: () => (
             <IconButton
-              style={{ marginRight: 10 }}
-              onPress={() =>
-                Platform.OS === "ios"
-                  ? router.push("/codes/scanner")
-                  : router.push("/scanner")
-              }
+              onPress={() => router.push("/socials")}
               icon={() => (
-                <MaterialCommunityIcons
-                  color="#fff"
-                  name="camera-outline"
-                  size={32}
-                />
-              )}
-            />
-          ),
-          tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons
-              name="card-multiple"
-              size={28}
-              color={color}
-            />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="accounts"
-        options={{
-          tabBarShowLabel: true,
-          tabBarLabel: "Accounts",
-          headerTitle: "Accounts",
-          headerTitleAlign: "left",
-          headerTitleStyle: { fontSize: 32 },
-          tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons
-              name="account-multiple"
-              size={28}
-              color={color}
-            />
-          ),
-          headerRight: () => (
-            <Button
-              style={{ marginRight: 10 }}
-              mode="text"
-              onPress={() => router.push("/codes")}
-              labelStyle={{ fontSize: 18, color: "#fff" }}
-            >
-              Done
-            </Button>
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="scanner"
-        options={{
-          href: null,
-          headerShown: true,
-          headerTitle: "",
-          headerLeft: () => (
-            <IconButton
-              onPress={() => router.back()}
-              icon={() => (
-                <MaterialCommunityIcons color="white" name="close" size={28} />
+                <Ionicons color="#212121" name="person-circle" size={38} />
               )}
             />
           ),
@@ -88,15 +43,60 @@ export default () => {
       <Tabs.Screen
         name="create"
         options={{
-          href: null,
-          headerShown: true,
-          headerTitle: "Create Code",
+          tabBarLabel: "Create code",
+          tabBarIcon: ({ color }) => (
+            <View
+              style={{
+                position: "absolute",
+                bottom: 0, // space from bottombar
+                height: 68,
+                width: 68,
+                borderRadius: 50,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <IconButton
+                onPress={() => router.push("/codes/create")}
+                icon={() => (
+                  <Ionicons color="#212121" name="add-circle" size={70} />
+                )}
+                size={90}
+              />
+            </View>
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="scanner"
+        options={{
+          headerShown: false,
+          tabBarLabel: "Scanner",
+          tabBarLabelStyle: { fontWeight: "700" },
+          tabBarShowLabel: false,
+          headerShadowVisible: false,
+          tabBarStyle: {
+            borderTopWidth: 1,
+            borderTopColor: "#F2F2F2",
+            display: "none",
+          },
           headerLeft: () => (
             <IconButton
               onPress={() => router.back()}
               icon={() => (
-                <MaterialCommunityIcons name="close" color="white" size={28} />
+                <Ionicons
+                  color="#212121"
+                  name="chevron-back-circle"
+                  size={32}
+                />
               )}
+            />
+          ),
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons
+              name="camera-outline"
+              size={32}
+              color={color}
             />
           ),
         }}

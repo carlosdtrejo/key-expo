@@ -5,22 +5,23 @@ import { Stack, useSearchParams } from "expo-router";
 import QRCode from "react-native-qrcode-svg";
 import { useSelector } from "react-redux";
 import { selectLibrary } from "../../store/librarySlice";
-import { FontAwesome5, MaterialCommunityIcons } from "@expo/vector-icons";
+import {
+  FontAwesome5,
+  MaterialCommunityIcons,
+  Ionicons,
+} from "@expo/vector-icons";
 import ViewShot, { captureRef } from "react-native-view-shot";
 import * as Sharing from "expo-sharing";
 import * as MediaLibrary from "expo-media-library";
-import {
-  IconButton,
-  Button,
-  Dialog,
-  Portal,
-  PaperProvider,
-} from "react-native-paper";
+import { IconButton, Button, Dialog } from "react-native-paper";
 
 import medias from "../../data/medias";
 
+import { useRouter } from "expo-router";
+
 const DetailsPage = () => {
   const { id } = useSearchParams();
+  const router = useRouter();
 
   const viewShot = useRef();
 
@@ -83,18 +84,28 @@ const DetailsPage = () => {
   };
   const getUsername = (item) => {
     const value = item.split(":");
-    return value[1];
+    return `@${value[1]}`;
   };
   return (
-    <PaperProvider>
-      <View style={styles.container}>
-        <Stack.Screen
-          options={{
-            headerShown: true,
-            headerTitle: "",
-          }}
-        />
-        <ViewShot ref={viewShot} options={{ format: "jpg", quality: 0.9 }}>
+    <View style={styles.container}>
+      <Stack.Screen
+        options={{
+          headerShown: true,
+          headerTitle: "",
+          headerShadowVisible: false,
+          headerTitleStyle: { fontSize: 22 },
+          headerLeft: () => (
+            <IconButton
+              onPress={() => router.back()}
+              icon={() => (
+                <Ionicons color="#212121" name="chevron-back" size={42} />
+              )}
+            />
+          ),
+        }}
+      />
+      <ViewShot ref={viewShot} options={{ format: "jpg", quality: 0.9 }}>
+        <View>
           <View style={styles.qrcode}>
             <QRCode size={200} value={finalQrCodeValue} />
           </View>
@@ -103,51 +114,49 @@ const DetailsPage = () => {
               <View key={idx} style={styles.accountContent}>
                 <FontAwesome5
                   name={getIcon(acc)}
-                  size={28}
+                  size={35}
                   color={getColor(acc)}
                 />
                 <Text style={styles.username}>{getUsername(acc)}</Text>
               </View>
             ))}
           </View>
-        </ViewShot>
-        <Portal>
-          <Dialog visible={visible} onDismiss={hideDialog}>
-            <Dialog.Title>Success!</Dialog.Title>
-            <Dialog.Content>
-              <Text>{textDialog}</Text>
-            </Dialog.Content>
-            <Dialog.Actions>
-              <Button onPress={hideDialog}>Done</Button>
-            </Dialog.Actions>
-          </Dialog>
-        </Portal>
-        <View style={styles.actions}>
-          <IconButton
-            mode="contained"
-            icon={() => (
-              <MaterialCommunityIcons
-                color="#fff"
-                name="export-variant"
-                size={30}
-              />
-            )}
-            containerColor="#212121"
-            size={50}
-            onPress={onSharePressed}
-          />
-          <IconButton
-            mode="contained"
-            icon={() => (
-              <MaterialCommunityIcons color="#fff" name="download" size={30} />
-            )}
-            containerColor="#212121"
-            size={50}
-            onPress={onDownloadPressed}
-          />
         </View>
+      </ViewShot>
+      <Dialog visible={visible} onDismiss={hideDialog}>
+        <Dialog.Title>Success!</Dialog.Title>
+        <Dialog.Content>
+          <Text>{textDialog}</Text>
+        </Dialog.Content>
+        <Dialog.Actions>
+          <Button onPress={hideDialog}>Done</Button>
+        </Dialog.Actions>
+      </Dialog>
+      <View style={styles.actions}>
+        <IconButton
+          mode="contained"
+          icon={() => (
+            <MaterialCommunityIcons
+              color="#212121"
+              name="export-variant"
+              size={24}
+            />
+          )}
+          containerColor="#F2F2F2"
+          size={40}
+          onPress={onSharePressed}
+        />
+        <IconButton
+          mode="contained"
+          icon={() => (
+            <MaterialCommunityIcons color="#212121" name="download" size={24} />
+          )}
+          containerColor="#F2F2F2"
+          size={40}
+          onPress={onDownloadPressed}
+        />
       </View>
-    </PaperProvider>
+    </View>
   );
 };
 
@@ -157,7 +166,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "flex-start",
+    justifyContent: "center",
   },
   qrcode: {
     margin: 80,
@@ -174,7 +183,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   username: {
-    color: "#fff",
+    color: "#212121",
     fontWeight: "700",
     fontSize: 18,
   },

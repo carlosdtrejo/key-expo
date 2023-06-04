@@ -8,7 +8,7 @@ const medias = {
   gh: {
     name: "Github",
     icon: "github",
-    color: "#4078c0",
+    color: "#000",
     url: "https://www.github.com/",
   },
   ig: {
@@ -44,7 +44,7 @@ const medias = {
   sc: {
     name: "Snapchat",
     icon: "snapchat",
-    color: "yellow",
+    color: "#000",
     url: "https://www.snapchat.com/add/",
   },
   scd: {
