@@ -1,4 +1,4 @@
-# React Native Social Media Profiles Sharing App
+# Key: Social Media Profiles Sharing App
 
 This repository contains a React Native application that enables users to easily share their social media profiles by scanning each other's QR codes. The app is built using React, TypeScript, and Redux, along with Expo and other libraries.
 
@@ -51,10 +51,6 @@ Contributions to this project are welcome. To contribute, follow these steps:
 5. Submit a pull request to the main repository.
 
 Please ensure that your code adheres to the project's coding guidelines and follows best practices.
-
-## License
-
-This project is licensed under the [MIT License](LICENSE).
 
 ## Contact
 
