@@ -1,14 +1,17 @@
-import { View, FlatList, StyleSheet } from "react-native";
-import { Link, useNavigation, useRouter } from "expo-router";
-import { FontAwesome5 } from "@expo/vector-icons";
-import { IconButton, Button, Snackbar, Text } from "react-native-paper";
-
 import { useState } from "react";
+
+import { View, FlatList, StyleSheet } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { selectAccount } from "../../store/accountSlice";
-import medias from "../../data/medias";
+
+import { IconButton, Button, Snackbar, Text, Appbar } from "react-native-paper";
+
+import { Stack, useNavigation, useRouter } from "expo-router";
+import { FontAwesome5, Ionicons } from "@expo/vector-icons";
 
 import { createCode } from "../../store/librarySlice";
+import { selectAccount } from "../../store/accountSlice";
+
+import medias from "../../data/medias";
 
 const Modal = () => {
   const navigation = useNavigation();
@@ -23,7 +26,6 @@ const Modal = () => {
   const [visible, setVisible] = useState(false);
 
   const onToggleSnackBar = () => setVisible(!visible);
-
   const onDismissSnackBar = () => setVisible(false);
 
   const [selectedMedias, setSelectedMedias] = useState(new Set());
@@ -55,7 +57,6 @@ const Modal = () => {
     const mediaColor = media.color;
     const mediaName = media.icon;
     const mediaId = item.id;
-
     const isMediaSelected = selectedMedias.has(mediaId);
     return (
       <View style={{ padding: 10 }}>
@@ -63,12 +64,12 @@ const Modal = () => {
           mode="contained"
           icon={() => (
             <FontAwesome5
-              color={isMediaSelected ? "#fff" : "#F2F2F2"}
+              color={isMediaSelected ? "#fff" : "#212121"}
               name={mediaName}
-              size={28}
+              size={32}
             />
           )}
-          size={40}
+          size={45}
           containerColor={isMediaSelected ? mediaColor : "#F2F2F2"}
           onPress={() => {
             if (selectedMedias.size >= 3 && !isMediaSelected) {
@@ -81,70 +82,97 @@ const Modal = () => {
             }
           }}
           selected={isMediaSelected}
+          accessibilityLabel={mediaName}
         />
       </View>
     );
   };
+  const _goBack = () => router.back();
 
   return (
-    <View
-      style={{
-        flex: 1,
-        alignItems: "center",
-        justifyContent: "center",
-        marginTop: 50,
-      }}
-    >
-      {/* Use `../` as a simple way to navigate to the root. This is not analogous to "goBack". */}
-      {!isPresented && <Link href="../">Dismiss</Link>}
-      {/* Native modals have dark backgrounds on iOS, set the status bar to light content. */}
-      <FlatList
-        keyExtractor={({ id }) => id}
-        data={enabledAccounts}
-        renderItem={renderItem}
-        horizontal={false}
-        numColumns={4}
-        ItemSeparatorComponent={() => <View style={{ height: 50 }} />}
-      />
-      <Snackbar
-        style={styles.snackbar}
-        visible={visible}
-        onDismiss={onDismissSnackBar}
-        action={{
-          label: "Dismiss",
-          textColor: "#fff",
+    <>
+      <Appbar.Header style={{ backgroundColor: "#fff" }}>
+        <Appbar.BackAction onPress={_goBack} />
+        <Appbar.Content
+          title="Create Code"
+          titleStyle={{ fontWeight: "700" }}
+        />
+      </Appbar.Header>
+      <Stack.Screen
+        options={{
+          headerShown: false,
+          headerTitle: "Create Code",
+          headerTitleAlign: "left",
+          headerShadowVisible: false,
+          headerLeft: () => (
+            <IconButton
+              onPress={() => router.back()}
+              icon={() => (
+                <Ionicons color="#212121" name="chevron-back" size={32} />
+              )}
+            />
+          ),
         }}
-        duration={4000}
+      />
+      <View
+        style={{
+          flex: 1,
+          alignItems: "center",
+          justifyContent: "center",
+          marginTop: 50,
+        }}
       >
-        {selectedMedias.size === 0 && (
-          <Text style={{ color: "#fff" }}>
-            You must select at least one account.
-          </Text>
-        )}
-        {selectedMedias.size >= 3 && (
-          <Text style={{ color: "#fff" }}>
-            You can only select up to 3 accounts.
-          </Text>
-        )}
-      </Snackbar>
-      {enabledAccounts.size !== 0 && (
-        <Button
-          mode="contained"
-          uppercase={true}
-          onPress={handleCreateCode}
-          labelStyle={{ fontWeight: "bold", fontSize: 22, paddingTop: 5 }}
-          contentStyle={{ margin: 10 }}
-          style={{
-            marginBottom: 50,
-            backgroundColor: "#212121",
-            width: 300,
-            borderRadius: 90,
+        {/* Native modals have dark backgrounds on iOS, set the status bar to light content. */}
+        <FlatList
+          keyExtractor={({ id }) => id}
+          data={enabledAccounts}
+          renderItem={renderItem}
+          horizontal={false}
+          numColumns={4}
+          ItemSeparatorComponent={() => <View style={{ height: 50 }} />}
+        />
+        <Snackbar
+          style={styles.snackbar}
+          visible={visible}
+          onDismiss={onDismissSnackBar}
+          action={{
+            label: "Dismiss",
+            textColor: "#fff",
           }}
+          duration={4000}
         >
-          Create
-        </Button>
-      )}
-    </View>
+          {selectedMedias.size === 0 && (
+            <Text style={{ color: "#fff" }}>
+              You must select at least one account.
+            </Text>
+          )}
+          {selectedMedias.size >= 3 && (
+            <Text style={{ color: "#fff" }}>
+              You can only select up to 3 accounts.
+            </Text>
+          )}
+        </Snackbar>
+        {enabledAccounts.size !== 0 && (
+          <Button
+            mode="contained"
+            uppercase={true}
+            onPress={handleCreateCode}
+            labelStyle={{ fontWeight: "bold", fontSize: 22, paddingTop: 5 }}
+            contentStyle={{ margin: 10 }}
+            style={{
+              marginBottom: 50,
+              backgroundColor:
+                selectedMedias.size === 0 ? "#D9DAD8" : "#5A3377",
+              width: 300,
+              borderRadius: 90,
+            }}
+            disabled={selectedMedias.size === 0}
+          >
+            Create
+          </Button>
+        )}
+      </View>
+    </>
   );
 };
 

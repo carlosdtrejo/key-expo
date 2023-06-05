@@ -14,7 +14,7 @@ export const librarySlice = createSlice({
       state.value.push(action.payload);
     },
     deleteCode: (state, action) => {
-      state.value.splice(action.payload.index, 1);
+      state.value.splice(action.payload, 1);
     },
   },
 });

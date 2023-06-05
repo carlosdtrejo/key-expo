@@ -1,11 +1,12 @@
+import { Platform, View } from "react-native";
+
+import { IconButton } from "react-native-paper";
+
 import { Tabs, useRouter } from "expo-router";
 import {
   MaterialCommunityIcons,
-  FontAwesome5,
   Ionicons,
 } from "@expo/vector-icons";
-import { IconButton } from "react-native-paper";
-import { View } from "react-native";
 
 export default () => {
   const router = useRouter();
@@ -20,22 +21,39 @@ export default () => {
           tabBarLabel: "My Codes",
           headerTitle: "Codes",
           headerTitleAlign: "left",
-          headerTitleStyle: { fontSize: 32 },
-          tabBarLabelStyle: { fontWeight: "700" },
+          headerTitleStyle: { fontSize: 34 },
+          tabBarLabelStyle: { fontWeight: "700", fontSize: 10 },
           tabBarIcon: ({ color }) => (
             <Ionicons name="qr-code" size={32} color={color} />
           ),
           tabBarStyle: {
-            borderTopWidth: 1,
             borderTopColor: "#F2F2F2",
+            shadowOffset: {
+              width: 0,
+              height: 12,
+            },
+            shadowOpacity: 0.74,
+            shadowRadius: 14,
+            elevation: 24,
+            borderTopLeftRadius: 25,
+            borderTopRightRadius: 25,
+            backgroundColor: "#fff",
+            position: "absolute",
+            bottom: 0,
+            padding: 10,
+            width: "100%",
+            height: 90,
+            zIndex: 0,
+            justifyContent: "center",
+            alignItems: "center",
           },
           headerShadowVisible: false,
           headerRight: () => (
             <IconButton
               onPress={() => router.push("/socials")}
-              icon={() => (
-                <Ionicons color="#212121" name="person-circle" size={38} />
-              )}
+              icon="account-circle"
+              iconColor="#5A3377"
+              size={38}
             />
           ),
         }}
@@ -43,25 +61,48 @@ export default () => {
       <Tabs.Screen
         name="create"
         options={{
-          tabBarLabel: "Create code",
+          headerTitle: "Create Code",
+          headerShown: false,
+          tabBarLabel: "Create",
+          tabBarShowLabel: false,
+          tabBarLabelStyle: { color: "red", fontWeight: "700", fontSize: 14 },
+          tabBarStyle: {
+            borderTopColor: "#F2F2F2",
+            shadowOffset: {
+              width: 0,
+              height: 12,
+            },
+            shadowOpacity: 0.74,
+            shadowRadius: 14,
+            elevation: 24,
+            borderTopLeftRadius: 25,
+            borderTopRightRadius: 25,
+            backgroundColor: "#fff",
+            position: "absolute",
+            bottom: 0,
+            padding: 10,
+            width: "100%",
+            height: 90,
+            zIndex: 0,
+            justifyContent: "center",
+            alignItems: "center",
+          },
           tabBarIcon: ({ color }) => (
             <View
               style={{
                 position: "absolute",
                 bottom: 0, // space from bottombar
-                height: 68,
-                width: 68,
-                borderRadius: 50,
                 justifyContent: "center",
                 alignItems: "center",
               }}
             >
               <IconButton
-                onPress={() => router.push("/codes/create")}
-                icon={() => (
-                  <Ionicons color="#212121" name="add-circle" size={70} />
-                )}
-                size={90}
+                mode="contained"
+                containerColor="#5A3377"
+                onPress={() => router.push(Platform.OS === "ios" ? "/codes/create" : "/create")}
+                iconColor="#fff"
+                icon="plus"
+                size={60}
               />
             </View>
           ),
@@ -70,9 +111,11 @@ export default () => {
       <Tabs.Screen
         name="scanner"
         options={{
-          headerShown: false,
+          headerShown: true,
+          headerTitle: "",
+          headerTransparent: true,
           tabBarLabel: "Scanner",
-          tabBarLabelStyle: { fontWeight: "700" },
+          tabBarLabelStyle: { fontWeight: "700", fontSize: 10 },
           tabBarShowLabel: false,
           headerShadowVisible: false,
           tabBarStyle: {
@@ -83,20 +126,18 @@ export default () => {
           headerLeft: () => (
             <IconButton
               onPress={() => router.back()}
-              icon={() => (
-                <Ionicons
-                  color="#212121"
-                  name="chevron-back-circle"
-                  size={32}
-                />
-              )}
+              icon="chevron-left"
+              iconColor="#fff"
+              containerColor="#212121"
+              size={28}
             />
           ),
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons
               name="camera-outline"
-              size={32}
+              size={38}
               color={color}
+              onPress={() => router.push('/codes/scanner')}
             />
           ),
         }}

@@ -1,4 +1,14 @@
-const medias = {
+type MediaContent = {
+  name: string;
+  icon: string;
+  color: string;
+  url: string;
+};
+interface MediaRecord {
+  [key: string]: MediaContent
+}
+
+const medias: MediaRecord = {
   fb: {
     name: "Facebook",
     icon: "facebook",

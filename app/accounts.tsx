@@ -6,13 +6,22 @@ import {
   Keyboard,
   TouchableOpacity,
 } from "react-native";
-import { TextInput, Divider, Text, IconButton } from "react-native-paper";
-import { FontAwesome5, Ionicons } from "@expo/vector-icons";
+import {
+  TextInput,
+  Divider,
+  Text,
+  IconButton,
+  Appbar,
+} from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
-import medias from "../data/medias";
-import { enable, disable, selectAccount } from "../store/accountSlice";
 import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view";
+
 import { Stack, useRouter } from "expo-router";
+import { FontAwesome5, Ionicons } from "@expo/vector-icons";
+
+import { enable, disable, selectAccount } from "../store/accountSlice";
+
+import medias from "../data/medias";
 
 type AccountProps = {
   account: {
@@ -43,22 +52,7 @@ const Account = ({ account }: AccountProps) => {
 
   return (
     <View style={styles.accountContainer}>
-      <Stack.Screen
-        options={{
-          headerShown: true,
-          headerTitle: "Accounts",
-          headerTitleAlign: "left",
-          headerShadowVisible: false,
-          headerLeft: () => (
-            <IconButton
-              onPress={() => router.back()}
-              icon={() => (
-                <Ionicons color="#212121" name="chevron-back" size={32} />
-              )}
-            />
-          ),
-        }}
-      />
+      
       <FontAwesome5
         color={username ? color : "#212121"}
         name={icon}
@@ -72,7 +66,7 @@ const Account = ({ account }: AccountProps) => {
           backgroundColor: "#fff",
           fontWeight: username ? "700" : "400",
         }}
-        placeholder="@username"
+        placeholder="username"
         value={username}
         onChangeText={(username) => onChangeUsername(username)}
         activeUnderlineColor={color}
@@ -87,8 +81,31 @@ const Account = ({ account }: AccountProps) => {
 const AccountsPage = () => {
   const router = useRouter();
   const accounts = useSelector(selectAccount);
+
+  const _goBack = () => router.back();
+
   return (
     <>
+      <Appbar.Header style={{ backgroundColor: "#fff" }}>
+        <Appbar.BackAction onPress={_goBack} />
+        <Appbar.Content title="Accounts" titleStyle={{ fontWeight: "700" }} />
+      </Appbar.Header>
+      <Stack.Screen
+        options={{
+          headerShown: false,
+          headerTitle: "Accounts",
+          headerTitleAlign: "left",
+          headerShadowVisible: false,
+          headerLeft: () => (
+            <IconButton
+              onPress={() => router.back()}
+              icon={() => (
+                <Ionicons color="#212121" name="chevron-back" size={32} />
+              )}
+            />
+          ),
+        }}
+      />
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View
           style={{
@@ -101,7 +118,7 @@ const AccountsPage = () => {
             data={accounts}
             ItemSeparatorComponent={() => <Divider />}
             renderItem={({ item }) => <Account account={item} />}
-            style={{ marginHorizontal: 15 }}
+            style={{ marginLeft: 15 }}
           />
         </View>
       </TouchableWithoutFeedback>
@@ -129,15 +146,14 @@ const styles = StyleSheet.create({
   },
   button: {
     width: "100%",
-    height: 100,
-    backgroundColor: "#212121",
+    height: 95,
+    backgroundColor: "#5A3377",
     alignItems: "center",
     justifyContent: "center",
   },
   buttonText: {
     fontSize: 24,
     color: "#fff",
-    paddingBottom: 30,
     fontWeight: "700",
   },
 });

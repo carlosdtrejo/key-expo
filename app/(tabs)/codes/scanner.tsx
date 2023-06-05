@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
-
 import { Text, View, StyleSheet, Platform } from "react-native";
+
 import { IconButton } from "react-native-paper";
-import MaskedView from "@react-native-masked-view/masked-view";
 
 import { useRouter } from "expo-router";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import * as ImagePicker from "expo-image-picker";
 
-import { schedulePushNotification } from "../../app/_layout";
+import MaskedView from "@react-native-masked-view/masked-view";
+
+import { schedulePushNotification } from "../../../app/_layout";
 
 export default function scanner() {
   const router = useRouter();
@@ -17,7 +18,6 @@ export default function scanner() {
   const MaskedViewed: any = MaskedView as any as { new (): MaskedViewFix };
 
   const [hasPermission, setHasPermission] = useState(null);
-  const [scanned, setScanned] = useState(false);
 
   const askForCameraPermission = async () => {
     const { status } = await BarCodeScanner.requestPermissionsAsync();
@@ -26,14 +26,12 @@ export default function scanner() {
 
   useEffect(() => {
     askForCameraPermission();
-
   }, []);
 
   const handleBarCodeScanned = async ({ data }) => {
-    // setScanned(true);
     await schedulePushNotification(data);
     router.back();
-0  };
+  };
 
   if (hasPermission === null) {
     return <Text>Requesting for camera permission</Text>;
@@ -68,12 +66,10 @@ export default function scanner() {
     >
       <View style={styles.container}>
         <BarCodeScanner
-          onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+          onBarCodeScanned={handleBarCodeScanned}
           style={StyleSheet.absoluteFillObject}
         />
-
         <View style={styles.barcodebox} />
-
         {Platform.OS === "ios" && (
           <View style={styles.actions}>
             <IconButton
@@ -90,6 +86,7 @@ export default function scanner() {
     </MaskedViewed>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

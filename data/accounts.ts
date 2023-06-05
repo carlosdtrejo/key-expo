@@ -1,4 +1,10 @@
-const accounts = [
+export type Account = {
+  id: string;
+  username: string;
+  enabled: boolean;
+};
+
+const accounts: Account[] = [
   { id: "fb", username: "", enabled: false },
   {
     id: "gh",

@@ -1,14 +1,16 @@
+import { useState } from "react";
+
 import { View, FlatList, StyleSheet } from "react-native";
-import { Link, useNavigation, useRouter } from "expo-router";
-import { FontAwesome5 } from "@expo/vector-icons";
+import { useDispatch, useSelector } from "react-redux";
 import { IconButton, Button, Text, Snackbar } from "react-native-paper";
 
-import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { selectAccount } from "../../../store/accountSlice";
-import medias from "../../../data/medias";
+import { Link, useNavigation, useRouter } from "expo-router";
+import { FontAwesome5 } from "@expo/vector-icons";
 
+import { selectAccount } from "../../../store/accountSlice";
 import { createCode } from "../../../store/librarySlice";
+
+import medias from "../../../data/medias";
 
 const Modal = () => {
   const navigation = useNavigation();
@@ -135,10 +137,11 @@ const Modal = () => {
           contentStyle={{ margin: 10 }}
           style={{
             marginBottom: 50,
-            backgroundColor: "#212121",
+            backgroundColor: selectedMedias.size === 0 ? "#D9DAD8" : "#5A3377",
             width: 300,
             borderRadius: 90,
           }}
+          disabled={selectedMedias.size === 0}
         >
           Create
         </Button>

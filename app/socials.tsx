@@ -1,11 +1,14 @@
-import { Stack, useRouter } from "expo-router";
 import React from "react";
 import { View, FlatList, StyleSheet } from "react-native";
+import { Divider, Text, Appbar } from "react-native-paper";
 import { useSelector } from "react-redux";
+
+import { Stack, useRouter } from "expo-router";
+import { FontAwesome5 } from "@expo/vector-icons";
+
 import { selectAccount } from "../store/accountSlice";
+
 import medias from "../data/medias";
-import { FontAwesome5, Ionicons } from "@expo/vector-icons";
-import { Divider, Text, IconButton } from "react-native-paper";
 
 type AccountProps = {
   account: {
@@ -43,35 +46,35 @@ const socials = () => {
   const enabledAccounts = accounts.filter(
     (account) => account.enabled === true
   );
+  const _goBack = () => router.back();
+  const _goToAccounts = () => router.push("/accounts");
+
   return (
-    <View style={styles.container}>
-      <Stack.Screen
-        options={{
-          headerShown: true,
-          headerTitle: "Socials",
-          headerShadowVisible: false,
-          headerBackTitle: "Codes",
-          headerLeft: () => (
-            <IconButton
-              onPress={() => router.back()}
-              icon={() => <Ionicons color="#212121" name="chevron-back" size={32} />}
-            />
-          ),
-          headerRight: () => (
-            <IconButton
-              onPress={() => router.push("/accounts")}
-              icon={() => <Ionicons color="#212121" name="add-circle" size={32} />}
-            />
-          ),
-        }}
-      />
-      <FlatList
-        keyExtractor={({ id }) => id}
-        data={enabledAccounts}
-        renderItem={({ item }) => <Account account={item} />}
-        ItemSeparatorComponent={() => <Divider />}
-      />
-    </View>
+    <>
+      <Appbar.Header style={{ backgroundColor: "#fff" }}>
+        <Appbar.BackAction onPress={_goBack} />
+        <Appbar.Content title="Socials" titleStyle={{ fontWeight: "700" }} />
+        <Appbar.Action
+          icon="plus-circle"
+          color="#5A3377"
+          onPress={_goToAccounts}
+          size={36}
+        />
+      </Appbar.Header>
+      <View style={styles.container}>
+        <Stack.Screen
+          options={{
+            headerShown: false,
+          }}
+        />
+        <FlatList
+          keyExtractor={({ id }) => id}
+          data={enabledAccounts}
+          renderItem={({ item }) => <Account account={item} />}
+          ItemSeparatorComponent={() => <Divider />}
+        />
+      </View>
+    </>
   );
 };
 
@@ -83,8 +86,10 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   accountContainer: {
-    padding: 20,
+    marginLeft: 20,
+    marginVertical: 20,
     flex: 1,
+    alignItems: "center",
     flexDirection: "row",
   },
 });

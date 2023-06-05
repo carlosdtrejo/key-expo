@@ -1,17 +1,16 @@
 import React from "react";
 import { FlatList, View, StyleSheet, Pressable } from "react-native";
-import { Link, useRouter } from "expo-router";
-import { FAB, Divider } from "react-native-paper";
-import medias from "../../../data/medias";
-import Swipeable from "react-native-gesture-handler/Swipeable";
 import { useDispatch, useSelector } from "react-redux";
+
+import { Divider } from "react-native-paper";
+import Swipeable from "react-native-gesture-handler/Swipeable";
+
+import { Link } from "expo-router";
+import { Ionicons, FontAwesome5 } from "@expo/vector-icons";
+
 import { selectLibrary, deleteCode } from "../../../store/librarySlice";
-import { selectAccount } from "../../../store/accountSlice";
-import {
-  MaterialCommunityIcons,
-  Ionicons,
-  FontAwesome5,
-} from "@expo/vector-icons";
+
+import medias from "../../../data/medias";
 
 type Code = {
   media: string;
@@ -19,30 +18,18 @@ type Code = {
   value: string;
 }[];
 
-type ListItemProps = {
+interface ListItemProps {
   item: Code;
   index: number;
 };
 
 export default function HomePage() {
-  // Navigation
-  const router = useRouter();
-
   // Delete operation
   let prevOpenedRow;
   let refsArray: Array<any> = [];
 
   // State of Codes list (library)
   const library = useSelector(selectLibrary);
-  const accounts = useSelector(selectAccount);
-  const enabledAccounts = accounts.filter(
-    (account) => account.enabled === true
-  );
-
-  // FAB Group Button State
-  const [state, setState] = React.useState({ open: false });
-  const onStateChange = ({ open }) => setState({ open });
-  const { open } = state;
 
   const ListItem = ({ item, index }: ListItemProps) => {
     const dispatch = useDispatch();
@@ -69,7 +56,7 @@ export default function HomePage() {
     };
 
     const swipeFromRightOpen = () => {
-      dispatch(deleteCode({ index }));
+      dispatch(deleteCode({index}));
       closeRow(index);
     };
 
@@ -118,57 +105,6 @@ export default function HomePage() {
         keyExtractor={(_item, index) => `code ${index}`}
         renderItem={({ item, index }) => <ListItem item={item} index={index} />}
         ItemSeparatorComponent={() => <Divider />}
-      />
-      <FAB.Group
-        open={open}
-        visible
-        icon={open ? "close" : "account-plus"}
-        color={"#fff"}
-        fabStyle={{ backgroundColor: "#212121", borderRadius: 50 }}
-        backdropColor="rgba(0,0,0,0.5)"
-        actions={
-          enabledAccounts.length !== 0
-            ? [
-                {
-                  icon: "account",
-                  label: "Socials",
-                  color: "#fff",
-                  style: { backgroundColor: "#212121" },
-                  labelStyle: { fontWeight: "700" },
-                  containerStyle: { backgroundColor: "#212121" },
-                  labelTextColor: "#fff",
-                  onPress: () => router.push("/socials"),
-                },
-                {
-                  icon: "qrcode",
-                  label: "Create code",
-                  color: "#fff",
-                  style: { backgroundColor: "#212121" },
-                  labelStyle: { fontWeight: "700" },
-                  containerStyle: { backgroundColor: "#212121" },
-                  labelTextColor: "#fff",
-                  onPress: () => router.push("/codes/create"),
-                },
-              ]
-            : [
-                {
-                  icon: "account",
-                  label: "Add accounts",
-                  color: "#fff",
-                  style: { backgroundColor: "#212121" },
-                  labelStyle: { fontWeight: "700" },
-                  containerStyle: { backgroundColor: "#212121" },
-                  labelTextColor: "#fff",
-                  onPress: () => router.push("/accounts"),
-                },
-              ]
-        }
-        onStateChange={onStateChange}
-        onPress={() => {
-          if (open) {
-            // do something if the speed dial is open
-          }
-        }}
       />
     </View>
   );

@@ -3,7 +3,7 @@ import React, { useRef, useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Stack, useSearchParams } from "expo-router";
 import QRCode from "react-native-qrcode-svg";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectLibrary } from "../../store/librarySlice";
 import {
   FontAwesome5,
@@ -13,7 +13,15 @@ import {
 import ViewShot, { captureRef } from "react-native-view-shot";
 import * as Sharing from "expo-sharing";
 import * as MediaLibrary from "expo-media-library";
-import { IconButton, Button, Dialog } from "react-native-paper";
+import {
+  IconButton,
+  Button,
+  Dialog,
+  Appbar,
+  Chip,
+  Card,
+} from "react-native-paper";
+import { deleteCode } from "../../store/librarySlice";
 
 import medias from "../../data/medias";
 
@@ -23,15 +31,23 @@ const DetailsPage = () => {
   const { id } = useSearchParams();
   const router = useRouter();
 
+  const library = useSelector(selectLibrary);
+  const code = library[Number(id)];
+  const dispatch = useDispatch();
+
+  const _goBack = () => router.back();
+
+  const _delete = () => {
+    dispatch(deleteCode(id));
+    router.back();
+  };
+
   const viewShot = useRef();
 
   const [visible, setVisible] = React.useState(false);
   const showDialog = () => setVisible(true);
   const hideDialog = () => setVisible(false);
   const [textDialog, setDialog] = useState("");
-
-  const library = useSelector(selectLibrary);
-  const code = library[Number(id)];
 
   const allValues = [];
 
@@ -87,76 +103,117 @@ const DetailsPage = () => {
     return `@${value[1]}`;
   };
   return (
-    <View style={styles.container}>
-      <Stack.Screen
-        options={{
-          headerShown: true,
-          headerTitle: "",
-          headerShadowVisible: false,
-          headerTitleStyle: { fontSize: 22 },
-          headerLeft: () => (
-            <IconButton
-              onPress={() => router.back()}
-              icon={() => (
-                <Ionicons color="#212121" name="chevron-back" size={42} />
-              )}
-            />
-          ),
-        }}
-      />
-      <ViewShot ref={viewShot} options={{ format: "jpg", quality: 0.9 }}>
-        <View>
-          <View style={styles.qrcode}>
-            <QRCode size={200} value={finalQrCodeValue} />
+    <>
+      <Appbar.Header style={{ backgroundColor: "#fff" }}>
+        <Appbar.BackAction onPress={_goBack} />
+        <Appbar.Content title="My Code" titleStyle={{ fontWeight: "700" }} />
+        <Appbar.Action icon="delete" color="#5A3377" onPress={_delete} />
+      </Appbar.Header>
+      <View style={styles.container}>
+        <Stack.Screen
+          options={{
+            headerShown: false,
+          }}
+        />
+        <ViewShot ref={viewShot} options={{ format: "jpg", quality: 0.9 }}>
+          {/* <Card
+            style={{
+              shadowOffset: {
+                width: 0,
+                height: 12,
+              },
+              shadowOpacity: 0.34,
+              shadowRadius: 12,
+              marginTop: 25,
+              marginHorizontal: 100,
+              justifyContent: "center",
+              backgroundColor: "#fff",
+              borderRadius: 30,
+            }}
+          >
+            <Card.Content>
+              
+            </Card.Content>
+          </Card> */}
+          <View
+            style={{
+              shadowOffset: {
+                width: 0,
+                height: 12,
+              },
+              shadowOpacity: 0.34,
+              shadowRadius: 12,
+              paddingBottom: 40,
+              marginHorizontal: 100,
+              justifyContent: "center",
+              backgroundColor: "#fff",
+              borderRadius: 30,
+            }}
+          >
+            <View style={styles.qrcode}>
+              <QRCode size={200} value={finalQrCodeValue} />
+            </View>
+            <View style={styles.accounts}>
+              {code.map((acc, idx) => (
+                <View key={idx} style={styles.accountContent}>
+                  <Chip
+                    mode="outlined"
+                    disabled={true}
+                    icon={() => (
+                      <FontAwesome5
+                        name={getIcon(acc)}
+                        size={30}
+                        color={getColor(acc)}
+                      />
+                    )}
+                    onPress={() => console.log("Pressed")}
+                  >
+                    {getUsername(acc)}
+                  </Chip>
+                </View>
+              ))}
+            </View>
           </View>
-          <View style={styles.accounts}>
-            {code.map((acc, idx) => (
-              <View key={idx} style={styles.accountContent}>
-                <FontAwesome5
-                  name={getIcon(acc)}
-                  size={35}
-                  color={getColor(acc)}
-                />
-                <Text style={styles.username}>{getUsername(acc)}</Text>
-              </View>
-            ))}
-          </View>
+        </ViewShot>
+        <Dialog visible={visible} onDismiss={hideDialog}>
+          <Dialog.Title>Success!</Dialog.Title>
+          <Dialog.Content>
+            <Text>{textDialog}</Text>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button onPress={hideDialog}>Done</Button>
+          </Dialog.Actions>
+        </Dialog>
+        <View style={styles.actions}>
+          <IconButton
+            mode="contained"
+            icon={() => (
+              <MaterialCommunityIcons
+                color="#212121"
+                name="export-variant"
+                size={24}
+              />
+            )}
+            containerColor="#F2F2F2"
+            size={40}
+            onPress={onSharePressed}
+          />
+          <IconButton
+            mode="contained"
+            icon={() => (
+              <MaterialCommunityIcons
+                color="#212121"
+                name="download"
+                size={24}
+              />
+            )}
+            containerColor="#F2F2F2"
+            size={40}
+            onPress={onDownloadPressed}
+          />
         </View>
-      </ViewShot>
-      <Dialog visible={visible} onDismiss={hideDialog}>
-        <Dialog.Title>Success!</Dialog.Title>
-        <Dialog.Content>
-          <Text>{textDialog}</Text>
-        </Dialog.Content>
-        <Dialog.Actions>
-          <Button onPress={hideDialog}>Done</Button>
-        </Dialog.Actions>
-      </Dialog>
-      <View style={styles.actions}>
-        <IconButton
-          mode="contained"
-          icon={() => (
-            <MaterialCommunityIcons
-              color="#212121"
-              name="export-variant"
-              size={24}
-            />
-          )}
-          containerColor="#F2F2F2"
-          size={40}
-          onPress={onSharePressed}
-        />
-        <IconButton
-          mode="contained"
-          icon={() => (
-            <MaterialCommunityIcons color="#212121" name="download" size={24} />
-          )}
-          containerColor="#F2F2F2"
-          size={40}
-          onPress={onDownloadPressed}
-        />
       </View>
-    </View>
+    </>
   );
 };
 
@@ -174,7 +231,7 @@ const styles = StyleSheet.create({
   accounts: {
     alignItems: "center",
     justifyContent: "center",
-    gap: 50,
+    gap: 25,
   },
   accountContent: {
     flexDirection: "row",
