@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 
 import { View, Text, StyleSheet } from "react-native";
 import { Stack, useSearchParams } from "expo-router";
-import QRCode from "react-native-qrcode-svg";
+import QRCodeStyled from "react-native-qrcode-styled";
 import { useDispatch, useSelector } from "react-redux";
 import { selectLibrary } from "../../store/librarySlice";
 import {
@@ -116,32 +116,14 @@ const DetailsPage = () => {
           }}
         />
         <ViewShot ref={viewShot} options={{ format: "jpg", quality: 0.9 }}>
-          {/* <Card
-            style={{
-              shadowOffset: {
-                width: 0,
-                height: 12,
-              },
-              shadowOpacity: 0.34,
-              shadowRadius: 12,
-              marginTop: 25,
-              marginHorizontal: 100,
-              justifyContent: "center",
-              backgroundColor: "#fff",
-              borderRadius: 30,
-            }}
-          >
-            <Card.Content>
-              
-            </Card.Content>
-          </Card> */}
           <View
             style={{
+              marginTop: 25,
               shadowOffset: {
                 width: 0,
                 height: 12,
               },
-              shadowOpacity: 0.34,
+              shadowOpacity: 0.64,
               shadowRadius: 12,
               paddingBottom: 40,
               marginHorizontal: 100,
@@ -151,7 +133,23 @@ const DetailsPage = () => {
             }}
           >
             <View style={styles.qrcode}>
-              <QRCode size={200} value={finalQrCodeValue} />
+              <QRCodeStyled
+                data={finalQrCodeValue}
+                style={styles.svg}
+                padding={25}
+                pieceSize={8}
+                pieceBorderRadius={[0, 6, 0, 6]}
+                isPiecesGlued
+                gradient={{
+                  type: "linear",
+                  options: {
+                    start: [0, 0],
+                    end: [1, 1],
+                    colors: ["#da0c8b", "#00bfff"],
+                    locations: [0, 1],
+                  },
+                }}
+              />
             </View>
             <View style={styles.accounts}>
               {code.map((acc, idx) => (
@@ -226,7 +224,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   qrcode: {
-    margin: 80,
+    margin: 40,
   },
   accounts: {
     alignItems: "center",
@@ -250,5 +248,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     gap: 30,
+  },
+  svg: {
+    backgroundColor: 'white',
+    borderRadius: 16,
+    overflow: 'hidden',
   },
 });
